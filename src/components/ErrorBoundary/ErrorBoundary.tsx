@@ -17,10 +17,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Logged Error:", error, errorInfo);
     }
+    componentRefresh = () => {
+        this.setState({hasError: false});
 
+    }
     render() {
         if (this.state.hasError) {
-            return <h1>Something went wrong.</h1>;
+            return <>
+            <h1>Error is happen.</h1>
+            <button onClick={this.componentRefresh}>Refresh</button>
+            </>;
         }
 
         return this.props.children;
