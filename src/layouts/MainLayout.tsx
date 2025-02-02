@@ -51,7 +51,10 @@ class MainLayout extends Component<{}, InitialLayoutState> {
       body: bodyForm.toString()
     })
       .then((responce) => responce.json())
-      .then((data) => this.setState({ searchData: data }));
+      .then((data) => this.setState({ 
+        searchData: data,       
+        page: Math.min(Number(this.state.page), data.page.totalPages-1).toString() 
+      }));
     console.log(this.state.searchData);
   };
 
