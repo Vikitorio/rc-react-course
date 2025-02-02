@@ -14,7 +14,10 @@ class Button extends Component<ButtonProps> {
     const { variant, children, ...props } = this.props;
 
     return (
-      <button className={`${style['button']} ${style[`button--${variant}`]}`} {...props}>
+      <button
+        className={`${style['button']} ${style[`button--${variant}`]}`}
+        {...props}
+      >
         {children}
       </button>
     );

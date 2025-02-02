@@ -3,17 +3,47 @@ import TopControls from '../components/TopControls/TopControls';
 import SearchResult from '../components/SearchResult/SearchResult';
 import ErrorBtn from '../components/ErrorBtn/ErrorBtn';
 
-interface InitialLayoutState {
+interface AstronomicalObject {
+  uid: string;
+  name: string;
+  astronomicalObjectType: string;
+  location: Location;
+}
+interface Pagination {
+  pageNumber: number;
+  pageSize: number;
+  numberOfElements: number;
+  totalElements: number;
+  totalPages: number;
+  firstPage: boolean;
+  lastPage: boolean;
+}
+interface ApiResponse {
+  page: Pagination;
+  astronomicalObjects: AstronomicalObject[];
+}
+interface LayoutState {
   searchParam: string;
   pageSize: string;
   page: string;
-  searchData: object;
+  searchData: ApiResponse;
   isLoading: boolean;
   error: string | null;
 }
-class MainLayout extends Component<{}, InitialLayoutState> {
+class MainLayout extends Component<object, LayoutState> {
   state = {
-    searchData: {},
+    searchData: {
+      page: {
+        pageNumber: 0,
+        pageSize: 10,
+        numberOfElements: 0,
+        totalElements: 0,
+        totalPages: 0,
+        firstPage: true,
+        lastPage: false,
+      },
+      astronomicalObjects: [],
+    },
     searchParam: localStorage.getItem('searchValue') || '',
     pageSize: '10',
     page: '0',
@@ -25,7 +55,10 @@ class MainLayout extends Component<{}, InitialLayoutState> {
   componentDidMount(): void {
     this.fetchData();
   }
-  componentDidUpdate({}, prevState: Readonly<InitialLayoutState>): void {
+  componentDidUpdate(
+    _: Readonly<object>,
+    prevState: Readonly<LayoutState>
+  ): void {
     const { searchParam, pageSize, page } = this.state;
     if (
       prevState.searchParam !== searchParam ||
@@ -61,7 +94,7 @@ class MainLayout extends Component<{}, InitialLayoutState> {
               data.page.totalPages - 1
             ).toString(),
             isLoading: false,
-            error: null
+            error: null,
           });
         }, 1000);
       })

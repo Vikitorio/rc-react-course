@@ -20,14 +20,16 @@ class TopControls extends Component<TopControlsProps, TopControlsState> {
     return (
       <div className={style['search']}>
         <input
-        className={style['search__input']}
+          className={style['search__input']}
           type="search"
           placeholder="Enter value"
           value={this.state.searchValue}
           onChange={(e) => this.setState({ searchValue: e.target.value })}
           id="site-search"
         />
-        <button onClick={this.startSearch} className={style['search__button']}>Search</button>
+        <button onClick={this.startSearch} className={style['search__button']}>
+          Search
+        </button>
       </div>
     );
   }
