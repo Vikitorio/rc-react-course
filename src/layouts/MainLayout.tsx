@@ -2,7 +2,6 @@ import { Component } from 'react';
 import TopControls from '../components/TopControls/TopControls';
 import SearchResult from '../components/SearchResult/SearchResult';
 import ErrorBtn from '../components/ErrorBtn/ErrorBtn';
-import Spinner from '../components/Spinner/Spinner';
 
 interface InitialLayoutState {
   searchParam: string;
@@ -62,6 +61,7 @@ class MainLayout extends Component<{}, InitialLayoutState> {
               data.page.totalPages - 1
             ).toString(),
             isLoading: false,
+            error: null
           });
         }, 1000);
       })
@@ -81,13 +81,19 @@ class MainLayout extends Component<{}, InitialLayoutState> {
       page: page.toString(),
     });
   };
-  handleSeachParam = (seachValue: string) => {
-    this.setState({ searchParam: seachValue.trim() });
+  handleSeachParam = (searchValue: string) => {
+    if (this.state.searchParam === searchValue.trim()) {
+      this.fetchData();
+    } else {
+      this.setState({ searchParam: searchValue.trim() });
+    }
   };
-
+  refetch = () => {
+    this.fetchData();
+  };
   render() {
     return (
-      <div>
+      <>
         <TopControls onSearch={this.handleSeachParam} />
         <SearchResult
           data={this.state.searchData}
@@ -97,7 +103,7 @@ class MainLayout extends Component<{}, InitialLayoutState> {
           error={this.state.error}
         />
         <ErrorBtn />
-      </div>
+      </>
     );
   }
 }

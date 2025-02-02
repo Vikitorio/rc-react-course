@@ -1,7 +1,13 @@
 @use 'sass:math';
 $offset: 187;
 $duration: 1.4s;
-
+.box{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .spinner {
   animation: rotator $duration linear infinite;
 }
