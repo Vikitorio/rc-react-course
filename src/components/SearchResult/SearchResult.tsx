@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Pagination from '../Pagination/Pagination';
 import Spinner from '../Spinner/Spinner';
+import style from './style.module.scss';
 interface AstronomicalObjectParams {
   name: string;
   astronomicalObjectType: string;
@@ -31,42 +32,34 @@ class SearchResult extends Component<SearchResultProps> {
   render() {
     return (
       <Spinner isLoading={this.props.isLoading} error={this.props.error}>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.data?.astronomicalObjects
-              ? this.props.data?.astronomicalObjects.map((item) => {
-                  return (
-                    <tr key={item.name}>
-                      <td>{item.name}</td>
-                      <td>{item.astronomicalObjectType}</td>
-                    </tr>
-                  );
-                })
-              : null}
-          </tbody>
-        </table>
-        <div>
-          <select
-            id="table-pagination"
-            onChange={(e) => {
-              this.props.pageSizeChange(e.target.value);
-            }}
-            name="table-pagination"
-          >
-            <option value={10}>10 на сторінці</option>
-            <option value={50}>50 на сторінці</option>
-            <option value={100}>100 на сторінці</option>
-          </select>
-          <Pagination
-            page={this.props.data?.page}
-            setPage={this.props.pageChange}
-          />
+        <div className={style['search-result']}>
+          <table className={style['search-result__table']}>
+            <thead className={style['search-result__header']}>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody className={style['search-result__body']}>
+              {this.props.data?.astronomicalObjects
+                ? this.props.data?.astronomicalObjects.map((item) => {
+                    return (
+                      <tr key={item.name} className={style['search-result__row']}>
+                        <td className={style['search-result__cell']}>{item.name}</td>
+                        <td className={style['search-result__cell']}>{item.astronomicalObjectType}</td>
+                      </tr>
+                    );
+                  })
+                : null}
+            </tbody>
+          </table>
+          <div className={style['search-result__controls']}>
+            <Pagination
+              page={this.props.data?.page}
+              setPage={this.props.pageChange}
+              setPageSize={this.props.pageSizeChange}
+            />
+          </div>
         </div>
       </Spinner>
     );

@@ -1,5 +1,5 @@
-import  { Component } from 'react';
-
+import { Component } from 'react';
+import style from './style.module.scss';
 interface PaginationProps {
     page?: {
         pageNumber: number;
@@ -7,41 +7,62 @@ interface PaginationProps {
         totalPages: number;
         firstPage: boolean;
         lastPage: boolean;
-    }
-    setPage: (page:number) => void
+    };
+    setPage: (page: number) => void;
+    setPageSize: (pageSize: string) => void;
 }
 
-interface PaginationState {
-
-}
+interface PaginationState { }
 
 class Pagination extends Component<PaginationProps, PaginationState> {
-
-
     getPagesArray = () => {
-        const pageArray:number[] = [];
+        const pageArray: number[] = [];
         const currentPage = this.props.page?.pageNumber || 0;
         const totalPages = this.props.page?.totalPages || 0;
-        let pagesBack = currentPage-3;
-        let pagesUpfront = currentPage+2;
-        pagesBack < 0 ? pagesUpfront += (pagesBack * -1) : null;
-        console.log("pages",pagesBack, pagesUpfront)
-        for (let i = Math.max(pagesBack, 0); i <= Math.min(pagesUpfront,totalPages); i++) {
-            pageArray.push(i+1);
-          }
-          console.log("pageArray", pageArray)
+        let pagesBack = currentPage - 3;
+        let pagesUpfront = currentPage + 2;
+        pagesBack < 0 ? (pagesUpfront += pagesBack * -1) : null;
+        for (
+            let i = Math.max(pagesBack, 0);
+            i <= Math.min(pagesUpfront, totalPages - 1);
+            i++
+        ) {
+            pageArray.push(i + 1);
+        }
         return pageArray;
-    }
+    };
 
     render() {
         return (
-
-            <div>
-                {this.getPagesArray().map((value)=>{
-                    return <li key={value} onClick={()=>this.props.setPage(value-1)}>{value}</li>
-                })}
+            <div className={style['pagination']}>
+                <ul className={style['pagination__list']}>
+                    {this.getPagesArray().map((value) => (
+                        <li
+                            key={value}
+                            onClick={() => this.props.setPage(value - 1)}
+                            className={`${style['pagination__item']} ${
+                                this.props.page?.pageNumber === value - 1
+                                    ? style['pagination__item--active']
+                                    : ''
+                            }`}
+                        >
+                            {value}
+                        </li>
+                    ))}
+                </ul>
+                <select
+                    id="table-pagination"
+                    onChange={(e) => {
+                        this.props.setPageSize(e.target.value);
+                    }}
+                    name="table-pagination"
+                    className={style['pagination__select']}
+                >
+                    <option value={10}>10</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                </select>
             </div>
-
         );
     }
 }
