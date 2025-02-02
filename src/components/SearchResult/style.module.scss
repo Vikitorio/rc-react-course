@@ -1,0 +1,48 @@
+.search-result {
+  width: 100%;
+  min-height: 30vh;
+  margin: 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: start;
+
+  &__table {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+
+  &__header {
+    background: #f5f5f5;
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: bold;
+      border-bottom: 2px solid #ddd;
+    }
+  }
+
+  &__body {
+    tr {
+      &:nth-child(even) {
+        background: #fafafa;
+      }
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid #ddd;
+  }
+
+  &__cell {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+}
