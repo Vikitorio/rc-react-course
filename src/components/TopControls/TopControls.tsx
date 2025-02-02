@@ -9,10 +9,11 @@ interface TopControlsState {
 
 class TopControls extends Component<TopControlsProps, TopControlsState> {
   state = {
-    searchValue: '',
+    searchValue: localStorage.getItem('searchValue') || '',
   };
   startSearch = () => {
     console.log(this.state.searchValue);
+    localStorage.setItem('searchValue', this.state.searchValue);
     this.props.onSearch(this.state.searchValue);
   };
   render() {
