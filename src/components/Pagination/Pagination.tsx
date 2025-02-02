@@ -7,14 +7,15 @@ interface PaginationProps {
         totalPages: number;
         firstPage: boolean;
         lastPage: boolean;
+
     };
+    initialPageSize: number;
     setPage: (page: number) => void;
     setPageSize: (pageSize: string) => void;
 }
 
-interface PaginationState { }
 
-class Pagination extends Component<PaginationProps, PaginationState> {
+class Pagination extends Component<PaginationProps> {
     getPagesArray = () => {
         const pageArray: number[] = [];
         const currentPage = this.props.page?.pageNumber || 0;
@@ -52,6 +53,7 @@ class Pagination extends Component<PaginationProps, PaginationState> {
                 </ul>
                 <select
                     id="table-pagination"
+                    value={this.props.initialPageSize}
                     onChange={(e) => {
                         this.props.setPageSize(e.target.value);
                     }}

@@ -101,6 +101,7 @@ class MainLayout extends Component<{}, InitialLayoutState> {
           pageChange={this.handlePageChange}
           isLoading={this.state.isLoading}
           error={this.state.error}
+          pageSize={this.state.pageSize}
         />
         <ErrorBtn />
       </>

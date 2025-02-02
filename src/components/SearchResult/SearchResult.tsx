@@ -13,6 +13,7 @@ interface AstronomicalObjectParams {
 interface SearchResultProps {
   pageSizeChange: (pageSize: string) => void;
   pageChange: (page: number) => void;
+  pageSize: string;
   isLoading: boolean;
   error: string | null;
 
@@ -55,6 +56,7 @@ class SearchResult extends Component<SearchResultProps> {
             </tbody>
           </table>
           {this.props.data?.page?.totalElements && <Pagination
+            initialPageSize={Number(this.props.pageSize)}
             page={this.props.data?.page}
             setPage={this.props.pageChange}
             setPageSize={this.props.pageSizeChange}
