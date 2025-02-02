@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 interface TopControlsProps {
-  onSearch: (name?: string, pageNumber?: string, pageSize?: string) => void;
+  onSearch: (seachValue: string) => void;
 }
 interface TopControlsState {
   searchValue: string;
@@ -13,7 +13,7 @@ class TopControls extends Component<TopControlsProps, TopControlsState> {
   };
   startSearch = () => {
     console.log(this.state.searchValue);
-    this.props.onSearch();
+    this.props.onSearch(this.state.searchValue);
   };
   render() {
     return (
