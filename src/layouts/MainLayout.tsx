@@ -12,10 +12,28 @@ class MainLayout extends Component<{}, InitialLayoutState> {
   state = {
     searchData: {},
     searchParam: '',
-    pageSize: '',
-    page: '',
+    pageSize: '10',
+    page: '0',
   };
   baseUrl = 'https://stapi.co/api/v2/rest/astronomicalObject/';
+
+  componentDidMount(): void {
+    this.fetchData();
+  }
+  componentDidUpdate(prevProps: {},
+    prevState: Readonly<InitialLayoutState>): void {
+    const { searchParam, pageSize, page } = this.state;
+    console.log("updateParams", searchParam, pageSize, page)
+    if (prevState.searchParam !== searchParam ||
+      prevState.pageSize !== pageSize ||
+      prevState.page !== page
+    ) {
+      this.fetchData();
+    }
+  }
+
+
+
   fetchData = () => {
     console.log("fetch with pageSize", this.state.pageSize)
     const url = new URL(this.baseUrl + 'search');
@@ -40,17 +58,17 @@ class MainLayout extends Component<{}, InitialLayoutState> {
   handlePageSizeChange = (pageSize: string) => {
     this.setState({
       pageSize: pageSize,
-    }, this.fetchData);
+    });
 
   }
   handlePageChange = (page: number) => {
     this.setState({
       page: page.toString(),
-    }, this.fetchData);
+    });
 
   }
   handleSeachParam = (seachValue: string) => {
-    this.setState({ searchParam: seachValue }, this.fetchData);
+    this.setState({ searchParam: seachValue });
 
   }
 
