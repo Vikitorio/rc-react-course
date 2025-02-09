@@ -12,7 +12,7 @@ interface AstronomicalObjectParams {
 
 interface SearchResultProps {
   pageSizeChange: (pageSize: string) => void;
-  pageChange: (page: number) => void;
+  pageChange: (page: string) => void;
   pageSize: string;
   isLoading: boolean;
   error: string | null;

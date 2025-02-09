@@ -9,7 +9,7 @@ interface PaginationProps {
     lastPage: boolean;
   };
   initialPageSize: number;
-  setPage: (page: number) => void;
+  setPage: (page: string) => void;
   setPageSize: (pageSize: string) => void;
 }
 
@@ -40,7 +40,7 @@ class Pagination extends Component<PaginationProps> {
           {this.getPagesArray().map((value) => (
             <li
               key={value}
-              onClick={() => this.props.setPage(value - 1)}
+              onClick={() => this.props.setPage((value - 1).toString())}
               className={`${style['pagination__item']} ${
                 this.props.page?.pageNumber === value - 1
                   ? style['pagination__item--active']

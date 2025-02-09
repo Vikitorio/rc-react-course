@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TopControls from '../components/TopControls/TopControls';
 import SearchResult from '../components/SearchResult/SearchResult';
 import ErrorBtn from '../components/ErrorBtn/ErrorBtn';
@@ -8,6 +8,9 @@ interface AstronomicalObject {
   name: string;
   astronomicalObjectType: string;
   location: Location;
+}
+interface Location {
+  name: string;
 }
 interface Pagination {
   pageNumber: number;
@@ -22,61 +25,36 @@ interface ApiResponse {
   page: Pagination;
   astronomicalObjects: AstronomicalObject[];
 }
-interface LayoutState {
-  searchParam: string;
-  pageSize: string;
-  page: string;
-  searchData: ApiResponse;
-  isLoading: boolean;
-  error: string | null;
-}
-class MainLayout extends Component<object, LayoutState> {
-  state = {
-    searchData: {
-      page: {
-        pageNumber: 0,
-        pageSize: 10,
-        numberOfElements: 0,
-        totalElements: 0,
-        totalPages: 0,
-        firstPage: true,
-        lastPage: false,
-      },
-      astronomicalObjects: [],
+
+const MainLayout: React.FC = () => {
+  const [apiResponce, setApiResponce] = useState<ApiResponse>({
+    page: {
+      pageNumber: 0,
+      pageSize: 10,
+      numberOfElements: 0,
+      totalElements: 0,
+      totalPages: 0,
+      firstPage: true,
+      lastPage: false,
     },
-    searchParam: localStorage.getItem('searchValue') || '',
-    pageSize: '10',
-    page: '0',
-    isLoading: true,
-    error: null,
-  };
-  baseUrl = 'https://stapi.co/api/v2/rest/astronomicalObject/';
+    astronomicalObjects: [],
+  });
+  const [searchParam, setSearchParam] = useState<string>(
+    localStorage.getItem('searchValue') || ''
+  );
+  const [currentPageSize, setCurrentPageSize] = useState<string>('10');
+  const [currentPage, setCurrentPage] = useState<string>('0');
+  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  componentDidMount(): void {
-    this.fetchData();
-  }
-  componentDidUpdate(
-    _: Readonly<object>,
-    prevState: Readonly<LayoutState>
-  ): void {
-    const { searchParam, pageSize, page } = this.state;
-    if (
-      prevState.searchParam !== searchParam ||
-      prevState.pageSize !== pageSize ||
-      prevState.page !== page
-    ) {
-      this.setState({ isLoading: true });
-      this.fetchData();
-    }
-  }
-
-  fetchData = () => {
-    const url = new URL(this.baseUrl + 'search');
+  const baseUrl = 'https://stapi.co/api/v2/rest/astronomicalObject/';
+  const fetchData = useCallback(() => {
+    const url = new URL(baseUrl + 'search');
     const bodyForm = new URLSearchParams();
-    bodyForm.append('name', this.state.searchParam);
-    url.searchParams.append('name', this.state.searchParam.toString());
-    url.searchParams.append('pageNumber', this.state.page.toString());
-    url.searchParams.append('pageSize', this.state.pageSize.toString());
+    bodyForm.append('name', searchParam);
+    url.searchParams.append('name', searchParam.toString());
+    url.searchParams.append('pageNumber', currentPage.toString());
+    url.searchParams.append('pageSize', currentPageSize.toString());
     fetch(url.toString(), {
       method: 'POST',
       headers: {
@@ -87,59 +65,48 @@ class MainLayout extends Component<object, LayoutState> {
       .then((responce) => responce.json())
       .then((data) => {
         setTimeout(() => {
-          this.setState({
-            searchData: data,
-            page: Math.min(
-              Number(this.state.page),
-              data.page.totalPages - 1
-            ).toString(),
-            isLoading: false,
-            error: null,
-          });
+          setisLoading(false);
+          setError(null);
+          setApiResponce(data);
+          setCurrentPage(
+            Math.min(Number(currentPage), data.page.totalPages - 1).toString()
+          );
         }, 1000);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
-        this.setState({ isLoading: false, error: error.message });
+        setisLoading(false);
+        setError(error.message);
       });
-  };
+  }, [searchParam, currentPage, currentPageSize]);
 
-  handlePageSizeChange = (pageSize: string) => {
-    this.setState({
-      pageSize: pageSize,
-    });
-  };
-  handlePageChange = (page: number) => {
-    this.setState({
-      page: page.toString(),
-    });
-  };
-  handleSeachParam = (searchValue: string) => {
-    if (this.state.searchParam === searchValue.trim()) {
-      this.fetchData();
+  useEffect(() => {
+    setisLoading(true);
+    fetchData();
+  }, [searchParam, currentPageSize, currentPage, fetchData]);
+
+  const handleSeachParam = (searchValue: string) => {
+    if (searchParam === searchValue.trim()) {
+      fetchData();
     } else {
-      this.setState({ searchParam: searchValue.trim() });
+      setSearchParam(searchValue);
     }
   };
-  refetch = () => {
-    this.fetchData();
-  };
-  render() {
-    return (
-      <>
-        <TopControls onSearch={this.handleSeachParam} />
-        <SearchResult
-          data={this.state.searchData}
-          pageSizeChange={this.handlePageSizeChange}
-          pageChange={this.handlePageChange}
-          isLoading={this.state.isLoading}
-          error={this.state.error}
-          pageSize={this.state.pageSize}
-        />
-        <ErrorBtn />
-      </>
-    );
-  }
-}
+
+  return (
+    <>
+      <TopControls onSearch={handleSeachParam} />
+      <SearchResult
+        data={apiResponce}
+        pageSizeChange={setCurrentPageSize}
+        pageChange={setCurrentPage}
+        isLoading={isLoading}
+        error={error}
+        pageSize={currentPageSize}
+      />
+      <ErrorBtn />
+    </>
+  );
+};
 
 export default MainLayout;
