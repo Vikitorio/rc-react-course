@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TopControls from '../components/TopControls/TopControls';
 import SearchResult from '../components/SearchResult/SearchResult';
 import ErrorBtn from '../components/ErrorBtn/ErrorBtn';
+import { Outlet } from 'react-router';
 
 interface AstronomicalObject {
   uid: string;
@@ -104,6 +105,7 @@ const MainLayout: React.FC = () => {
         error={error}
         pageSize={currentPageSize}
       />
+      <Outlet />
       <ErrorBtn />
     </>
   );
