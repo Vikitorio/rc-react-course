@@ -9,7 +9,15 @@ const ErrorBtn: React.FC = () => {
   if (isError) {
     throw new Error('Error happens!!!');
   }
-  return <>{!isError && <Button onClick={handleClick}>Throw Error</Button>}</>;
+  return (
+    <>
+      {!isError && (
+        <Button onClick={handleClick} variant="danger">
+          Throw Error
+        </Button>
+      )}
+    </>
+  );
 };
 
 export default ErrorBtn;
