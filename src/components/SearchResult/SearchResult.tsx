@@ -37,22 +37,22 @@ const SearchResult: React.FC<SearchResultProps> = (
   return (
     <div className={style['search-result']}>
       <Spinner isLoading={props.isLoading} error={props.error}>
-        <table className={style['search-result__table']}>
-          <thead className={style['search-result__header']}>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody className={style['search-result__body']}>
-            {props.data?.astronomicalObjects
-              ? props.data?.astronomicalObjects.map((item) => {
-                  return (
+        <div className={style['search-result__table-wrapper']}>
+          <table className={style['search-result__table']}>
+            <thead className={style['search-result__header']}>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody className={style['search-result__body']}>
+              {props.data?.astronomicalObjects
+                ? props.data.astronomicalObjects.map((item) => (
                     <tr key={item.name} className={style['search-result__row']}>
                       <td className={style['search-result__cell']}>
                         <Link
                           to={{
-                            pathname: `/info/detailed=${item.uid}`,
+                            pathname: `/dashboard/detailed=${item.uid}`,
                             search: `${location.search}`,
                           }}
                         >
@@ -63,19 +63,22 @@ const SearchResult: React.FC<SearchResultProps> = (
                         {item.astronomicalObjectType}
                       </td>
                     </tr>
-                  );
-                })
-              : null}
-          </tbody>
-        </table>
-        {props.data?.page && (
-          <Pagination
-            initialPageSize={Number(props.pageSize)}
-            page={props.data?.page}
-            setPage={props.pageChange}
-            setPageSize={props.pageSizeChange}
-          />
-        )}
+                  ))
+                : null}
+            </tbody>
+          </table>
+        </div>
+        {props.data?.page?.totalPages !== undefined &&
+          props.data.page.totalPages > 0 && (
+            <div className={style['search-result__pagination']}>
+              <Pagination
+                initialPageSize={Number(props.pageSize)}
+                page={props.data.page}
+                setPage={props.pageChange}
+                setPageSize={props.pageSizeChange}
+              />
+            </div>
+          )}
       </Spinner>
     </div>
   );

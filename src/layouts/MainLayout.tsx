@@ -87,7 +87,7 @@ const MainLayout: React.FC = () => {
         setisLoading(false);
         setError(error.message);
       });
-  }, [searchParam, currentPage, currentPageSize, navigate]);
+  }, [searchParam, currentPage, currentPageSize]);
 
   useEffect(() => {
     setisLoading(true);
