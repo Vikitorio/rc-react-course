@@ -1,38 +1,34 @@
-import { Component } from 'react';
 import style from './style.module.scss';
+import { useNavigate } from 'react-router';
+import useLocalStorage from '../../hooks/useLocalStorage';
 interface TopControlsProps {
   onSearch: (seachValue: string) => void;
 }
-interface TopControlsState {
-  searchValue: string;
-}
 
-class TopControls extends Component<TopControlsProps, TopControlsState> {
-  state = {
-    searchValue: localStorage.getItem('searchValue') || '',
+const TopControls: React.FC<TopControlsProps> = (props: TopControlsProps) => {
+  const [searchValue, setSearchValue] = useLocalStorage('searchValue', '');
+  const navigate = useNavigate();
+  const startSearch = () => {
+    navigate(`?query=${searchValue}`);
+    localStorage.setItem('searchValue', searchValue);
+    props.onSearch(searchValue);
   };
-  startSearch = () => {
-    console.log(this.state.searchValue);
-    localStorage.setItem('searchValue', this.state.searchValue);
-    this.props.onSearch(this.state.searchValue);
-  };
-  render() {
-    return (
-      <div className={style['search']}>
-        <input
-          className={style['search__input']}
-          type="search"
-          placeholder="Enter value"
-          value={this.state.searchValue}
-          onChange={(e) => this.setState({ searchValue: e.target.value })}
-          id="site-search"
-        />
-        <button onClick={this.startSearch} className={style['search__button']}>
-          Search
-        </button>
-      </div>
-    );
-  }
-}
+
+  return (
+    <div className={style['search']}>
+      <input
+        className={style['search__input']}
+        type="search"
+        placeholder="Enter value"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        id="site-search"
+      />
+      <button onClick={startSearch} className={style['search__button']}>
+        Search
+      </button>
+    </div>
+  );
+};
 
 export default TopControls;

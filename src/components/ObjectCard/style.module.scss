@@ -1,0 +1,28 @@
+.item-detailed {
+  &__card {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 20vw;
+    height: 100%;
+    margin: 16px auto;
+    text-align: start;
+    padding: 0 10px 0 10px;
+    margin-left: 5px;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  &__type {
+  }
+
+  &__location {
+    &--name {
+    }
+  }
+}
