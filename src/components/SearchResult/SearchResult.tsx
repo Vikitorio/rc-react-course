@@ -1,7 +1,9 @@
 import Pagination from '../Pagination/Pagination';
 import Spinner from '../Spinner/Spinner';
 import style from './style.module.scss';
+import { Link, useLocation } from 'react-router';
 interface AstronomicalObjectParams {
+  uid: string;
   name: string;
   astronomicalObjectType: string;
   location: {
@@ -31,6 +33,7 @@ interface SearchResultProps {
 const SearchResult: React.FC<SearchResultProps> = (
   props: SearchResultProps
 ) => {
+  const location = useLocation();
   return (
     <div className={style['search-result']}>
       <Spinner isLoading={props.isLoading} error={props.error}>
@@ -47,7 +50,14 @@ const SearchResult: React.FC<SearchResultProps> = (
                   return (
                     <tr key={item.name} className={style['search-result__row']}>
                       <td className={style['search-result__cell']}>
-                        {item.name}
+                        <Link
+                          to={{
+                            pathname: `/info/detailed=${item.uid}`,
+                            search: `${location.search}`,
+                          }}
+                        >
+                          {item.name}
+                        </Link>
                       </td>
                       <td className={style['search-result__cell']}>
                         {item.astronomicalObjectType}
@@ -58,7 +68,7 @@ const SearchResult: React.FC<SearchResultProps> = (
               : null}
           </tbody>
         </table>
-        {props.data?.page?.totalElements && (
+        {props.data?.page && (
           <Pagination
             initialPageSize={Number(props.pageSize)}
             page={props.data?.page}

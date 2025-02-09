@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import style from './style.module.scss';
+import { useNavigate } from 'react-router';
 interface TopControlsProps {
   onSearch: (seachValue: string) => void;
 }
@@ -8,8 +9,9 @@ const TopControls: React.FC<TopControlsProps> = (props: TopControlsProps) => {
   const [searchValue, setSearchValue] = useState(
     localStorage.getItem('searchValue') || ''
   );
-
+  const navigate = useNavigate();
   const startSearch = () => {
+    navigate(`?query=${searchValue}`);
     localStorage.setItem('searchValue', searchValue);
     props.onSearch(searchValue);
   };

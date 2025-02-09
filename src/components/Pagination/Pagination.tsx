@@ -32,6 +32,9 @@ const Pagination: React.FC<PaginationProps> = (props: PaginationProps) => {
     return pageArray;
   };
 
+  const chnagePageSize = (newSize: string) => {
+    props.setPageSize(newSize);
+  };
   return (
     <div className={style['pagination']}>
       <ul className={style['pagination__list']}>
@@ -53,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = (props: PaginationProps) => {
         id="table-pagination"
         value={props.initialPageSize}
         onChange={(e) => {
-          props.setPageSize(e.target.value);
+          chnagePageSize(e.target.value);
         }}
         name="table-pagination"
         className={style['pagination__select']}

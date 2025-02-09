@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TopControls from '../components/TopControls/TopControls';
 import SearchResult from '../components/SearchResult/SearchResult';
 import ErrorBtn from '../components/ErrorBtn/ErrorBtn';
-import { Outlet } from 'react-router';
-
+import { Outlet, useNavigate } from 'react-router';
+import style from './style.module.scss';
 interface AstronomicalObject {
   uid: string;
   name: string;
@@ -47,6 +47,7 @@ const MainLayout: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>('0');
   const [isLoading, setisLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const baseUrl = 'https://stapi.co/api/v2/rest/astronomicalObject/';
   const fetchData = useCallback(() => {
@@ -56,6 +57,13 @@ const MainLayout: React.FC = () => {
     url.searchParams.append('name', searchParam.toString());
     url.searchParams.append('pageNumber', currentPage.toString());
     url.searchParams.append('pageSize', currentPageSize.toString());
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('pageSize', currentPageSize.toString());
+    searchParams.set('page', currentPage.toString());
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
     fetch(url.toString(), {
       method: 'POST',
       headers: {
@@ -79,7 +87,7 @@ const MainLayout: React.FC = () => {
         setisLoading(false);
         setError(error.message);
       });
-  }, [searchParam, currentPage, currentPageSize]);
+  }, [searchParam, currentPage, currentPageSize, navigate]);
 
   useEffect(() => {
     setisLoading(true);
@@ -97,15 +105,17 @@ const MainLayout: React.FC = () => {
   return (
     <>
       <TopControls onSearch={handleSeachParam} />
-      <SearchResult
-        data={apiResponce}
-        pageSizeChange={setCurrentPageSize}
-        pageChange={setCurrentPage}
-        isLoading={isLoading}
-        error={error}
-        pageSize={currentPageSize}
-      />
-      <Outlet />
+      <div className={style['layout__table_box']}>
+        <SearchResult
+          data={apiResponce}
+          pageSizeChange={setCurrentPageSize}
+          pageChange={setCurrentPage}
+          isLoading={isLoading}
+          error={error}
+          pageSize={currentPageSize}
+        />
+        <Outlet />
+      </div>
       <ErrorBtn />
     </>
   );
